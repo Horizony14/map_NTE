@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node -e \"require('fs').copyFileSync('./markers-data.json','./src/data/markers.json')\"",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview"
   },

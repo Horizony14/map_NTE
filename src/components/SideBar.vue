@@ -3,9 +3,9 @@ import { computed, ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useMarkerStore } from '@/stores/markerStore'
 import { MARKER_TYPE_CONFIG, MARKER_CATEGORIES } from '@/types'
 import type { MarkerType } from '@/types'
+import { EDITOR_ENABLED } from '@/config'
 
 const store = useMarkerStore()
-const isDev = import.meta.env.DEV
 
 const detailScrollRef = ref<HTMLElement | null>(null)
 const maxDescLines = ref(3)
@@ -204,7 +204,7 @@ function scrollToList(id: string) {
             </svg>
           </button>
           <button
-            v-if="isDev"
+            v-if="EDITOR_ENABLED"
             @click="handleToggleEditorMode()"
             class="w-7 h-7 flex items-center justify-center rounded-lg transition-colors flex-shrink-0"
             :class="store.isEditorMode ? 'text-primary-400 bg-primary-500/15' : 'text-slate-400 hover:text-white hover:bg-white/10'"

@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import type { MarkerData, MarkerType } from '@/types'
 import { ALL_MARKER_TYPES } from '@/types'
 import markersRaw from '@/data/markers.json'
+import { EDITOR_ENABLED } from '@/config'
 
 const STORAGE_KEY = 'isekai-map-found'
 
@@ -132,6 +133,7 @@ export const useMarkerStore = defineStore('markers', () => {
   }
 
   async function loadLatestMarkers() {
+    if (!EDITOR_ENABLED) return
     try {
       const res = await fetch('/api/markers')
       if (res.ok) {
@@ -142,6 +144,7 @@ export const useMarkerStore = defineStore('markers', () => {
 
   // ---- editor mode toggle ----
   async function toggleEditorMode() {
+    if (!EDITOR_ENABLED) return
     if (isEditorMode.value) {
       isEditorMode.value = false
     } else {
@@ -151,6 +154,7 @@ export const useMarkerStore = defineStore('markers', () => {
   }
 
   async function saveMarkersToFile(list: MarkerData[]) {
+    if (!EDITOR_ENABLED) return
     try {
       await fetch('/api/markers', {
         method: 'POST',
