@@ -1,0 +1,105 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #app {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  background: #010101;
+}
+
+/* Leaflet overrides */
+.leaflet-container {
+  background: #010101;
+  font-family: inherit;
+  touch-action: none;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.leaflet-control-zoom a {
+  background: rgba(15, 23, 42, 0.85) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(100, 116, 139, 0.3) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: rgba(30, 41, 59, 0.9) !important;
+}
+
+/* Marker cluster styles */
+.marker-cluster-small {
+  background-color: rgba(99, 102, 241, 0.3) !important;
+}
+.marker-cluster-small div {
+  background-color: rgba(99, 102, 241, 0.6) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+.marker-cluster-medium {
+  background-color: rgba(139, 92, 246, 0.3) !important;
+}
+.marker-cluster-medium div {
+  background-color: rgba(139, 92, 246, 0.6) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+.marker-cluster-large {
+  background-color: rgba(239, 68, 68, 0.3) !important;
+}
+.marker-cluster-large div {
+  background-color: rgba(239, 68, 68, 0.6) !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.55);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.35) transparent;
+}
+
+/* custom marker animation */
+.custom-marker:hover {
+  z-index: 999 !important;
+}
+.custom-marker:hover > div {
+  transform: scale(1.25);
+  transition: transform 0.15s ease;
+}
+.custom-marker.found {
+  opacity: 0.4;
+}
+.custom-marker.found img {
+  filter: grayscale(0.6);
+}
