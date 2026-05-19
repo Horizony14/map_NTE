@@ -1,19 +1,126 @@
-# 异环地图 (Isekai Map)
+<p align="center">
+  <img src="./public/icon.png" alt="异环地图" width="350" />
+</p>
+<h1 align="center">异环地图</h1>
+<p align="center">
+  <strong>NTE Map</strong> &mdash; 游戏《异环》交互式在线地图
+</p>
 
-交互式游戏地图 Web 应用，展示游戏"异环"中的传送点、收集品、任务、景点等可交互元素。  
 
-[在线地图](https://horizony14.github.io/map_NTE/)
+<p align="center">
+  <img src="https://img.shields.io/badge/免费-无付费内容-22c55e?style=flat-square" />
+  <img src="https://img.shields.io/badge/无广-清爽体验-3b82f6?style=flat-square" />
+  <img src="https://img.shields.io/badge/开源-MIT-green?style=flat-square&logo=github" />
+  <img src="https://img.shields.io/badge/免登录-即开即用-8b5cf6?style=flat-square" />
+</p>
+<p align="center">
+  <a href="https://horizony14.github.io/map_NTE/"><img src="https://img.shields.io/badge/在线地图-立即访问-3b82f6?style=for-the-badge" alt="在线地图" /></a>
+</p>
+
+
+---
+
+## 项目简介
+
+**异环地图（NTE Map）**是一个为游戏《异环》设计的交互式 Web 地图，帮助玩家快速定位游戏中的各类可交互元素 &mdash; 传送点、收集品、任务、打卡点等。同时添加了原游戏之外的标点类型 &mdash; 圣地巡礼、车辆等
+
+---
+
+## 核心功能
+
+由于异环中很多彩蛋和有趣的地方在地图中没有标记，受动画巡礼网站的启发，我们设计了这个交互式地图，帮助玩家发现并分享游戏中的隐藏地点与趣味内容。
+
+<table>
+  <tr>
+    <td valign="top" width="50%">
+
+### 发现与分享
+- **彩蛋 & 隐藏地点** &mdash; 收录游戏内未标注的彩蛋、打卡点和趣味位置
+- **圣地巡礼** &mdash; 标记动画取景地或现实对应场景，探索游戏世界的另一面
+- **详情预览** &mdash; 点击标记查看截图、描述、关联信息
+
+### 社区共建
+- **地图补点** &mdash; 发现遗漏标记？直接在地图上点击添加，上传截图即可贡献
+- **数据开放** &mdash; 所有标记数据随仓库开源，支持 PR 协作维护
+
+    </td>
+    <td valign="top" width="50%">
+
+### 快速查找
+- **分类筛选** &mdash; 按传送点 / 收集品 / 任务 / 景点 / 车辆分类查看
+- **模糊搜索** &mdash; 输入关键词直接定位目标
+- **图例切换** &mdash; 按需显示或隐藏某类标记
+
+### 收集追踪
+- **状态标记** &mdash; 点击切换已找 / 未找状态，随时掌握进度
+- **仅看未收集** &mdash; 一键过滤已完成标记
+- **自动保存** &mdash; 进度保存到浏览器，下次打开无需重新标记
+
+    </td>
+  </tr>
+</table>
+
+---
+
+## 标记类型一览
+
+| 分类 | 类型 | 说明 |
+|------|------|------|
+| 传送点 | 电话亭、维特海默塔 | 快速传送节点 |
+| 收集品 | 谕石、21 的赠礼、避役的包裹 | 可收集道具 |
+| 任务 | 异象委托、支线任务 | 剧情 / 委托触发点 |
+| 景点 | 打卡点、圣地巡礼 | 风景及纪念地点 |
+| 其他 | 车辆 | 载具刷新位置 |
+
+---
 
 ## 技术栈
 
-- **框架**: Vue 3 (Composition API + `<script setup>`)
-- **构建**: Vite
-- **状态管理**: Pinia
-- **样式**: Tailwind CSS
-- **地图渲染**: Leaflet + leaflet.markercluster
-- **语言**: TypeScript
+| 类别 | 技术 |
+|------|------|
+| 前端框架 | Vue 3 (Composition API + `<script setup>`) |
+| 构建工具 | Vite 5 |
+| 状态管理 | Pinia |
+| 样式方案 | Tailwind CSS 3 |
+| 地图引擎 | Leaflet + leaflet.markercluster |
+| 编程语言 | TypeScript |
+| 代码托管 | GitHub Pages |
 
-## 快速开始
+---
+
+## 目录结构
+
+```
+├── public/
+│   ├── icon.png               # 网站图标
+│   ├── map-base.png           # 地图底图（可替换）
+│   └── images/                # 标记点图标资源
+├── src/
+│   ├── App.vue                # 根布局
+│   ├── main.ts                # 应用入口
+│   ├── components/
+│   │   ├── MapView.vue        # 地图渲染 (Leaflet)
+│   │   ├── SideBar.vue        # 侧栏筛选与搜索
+│   │   ├── MarkerPopup.vue    # 标记详情弹窗
+│   │   ├── LegendPanel.vue    # 图例面板
+│   │   └── CreateMarkerForm.vue  # 用户创建标记表单
+│   ├── stores/
+│   │   └── markerStore.ts     # Pinia 状态管理
+│   ├── data/
+│   │   └── markers.json       # 标记点数据源
+│   ├── types/
+│   │   └── index.ts           # TypeScript 类型定义
+│   └── assets/
+│       └── main.css           # Tailwind 入口样式
+├── markers-data.json          # 外部标记数据文件
+├── index.html                 # HTML 入口
+├── vite.config.ts             # Vite 配置
+└── tailwind.config.js         # Tailwind 配置
+```
+
+---
+
+## 本地开发
 
 ```bash
 # 安装依赖
@@ -29,123 +136,55 @@ npm run build
 npm run preview
 ```
 
-## 目录结构
+开发服务器默认监听 `http://0.0.0.0:5173`，支持局域网内其他设备访问。
 
-```
-├── public/
-│   ├── map-base.png          # 地图底图（可自行替换）
-│   ├── icon.png              # 应用图标
-│   └── images/               # 标记点图标
-├── src/
-│   ├── App.vue               # 主布局
-│   ├── main.ts               # 入口
-│   ├── components/
-│   │   ├── MapView.vue       # 地图组件 (Leaflet)
-│   │   ├── SideBar.vue       # 侧栏筛选与列表
-│   │   ├── MarkerPopup.vue   # 标记详情弹窗
-│   │   ├── LegendPanel.vue   # 图例面板
-│   │   └── CreateMarkerForm.vue  # 标记点创建表单
-│   ├── stores/
-│   │   └── markerStore.ts    # Pinia 状态管理
-│   ├── data/
-│   │   └── markers.json      # 标记点数据
-│   ├── types/
-│   │   └── index.ts          # 类型定义
-│   └── assets/
-│       └── main.css          # Tailwind 样式入口
-├── index.html
-├── vite.config.ts
-├── tailwind.config.js
-├── postcss.config.js
-├── tsconfig.json
-└── package.json
-```
+### 配置开关
 
-## GitHub Pages 部署
+`src/config.ts` 中有两个布尔类型开关，按需修改：
 
-1. 确保 `vite.config.ts` 中 `base` 设置为 `'./'`（已配置）。
-2. 准备 `public/map-base.png` 地图底图。
-3. 运行 `npm run build`。
-4. 将 `dist/` 目录部署到 GitHub Pages。
+| 开关 | 默认值 | 作用 | 建议 |
+|------|--------|------|------|
+| `EDITOR_ENABLED` | `false` | 控制编辑者模式的显示。开启后侧栏出现编辑按钮，可在地图上添加/编辑/删除标记点，支持导入导出标记数据 | 本地开发时设为 `true`，提交到 GitHub Pages 时保持 `false` |
+| `JSDELIVR_CDN_ENABLED` | `true` | 控制静态资源（图标、图片）是否通过 jsDelivr CDN 加载 | 本地开发时建议设为 `false` 使用本地资源，部署时保持 `true` 以加速访问
 
-### 部署方式 A：使用 gh-pages 分支
+---
 
-```bash
-npm run build
-# 将 dist/ 目录推送到 gh-pages 分支
-npx gh-pages -d dist
-```
+## 使用条款
 
-### 部署方式 B：GitHub Actions
+1. **版权声明**：原创内容（包括但不限于文字、图片、代码、设计和排版）受版权法保护。异环游戏相关的所有素材（包括但不限于角色名称、图像、标志和游戏数据）均为 Perfect World / Hotta Studio 所有。合理使用这些素材仅为提供信息目的，不主张对其拥有权利。
+2. **用途声明**：本工具仅为《异环》玩家提供游戏辅助信息参考，与游戏官方无关，不代表任何官方立场。
+3. **数据准确性**：标记点数据由社区贡献维护，坐标与信息可能存在偏差，请以游戏内实际情况为准。
+4. **用户生成内容**：通过编辑者模式上传的图片和标记内容应遵守法律法规，不得包含违法、侵权或不适宜信息。上传者对其内容负责。
+5. **本地存储**：本应用仅使用浏览器 localStorage 保存您的收集进度，不会将您的个人数据上传至任何服务器。
+6. **免责声明**：使用本工具所产生的任何游戏体验或数据损失，开发者不承担相关责任。
+7. **开放许可**：本项目代码基于 MIT 协议开源，详见 [LICENSE](LICENSE) 文件。标记点数据随项目一同开放，欢迎贡献。
 
-在仓库设置中启用 GitHub Pages，选择 GitHub Actions 作为来源，创建以下 workflow：
+---
 
-```yaml
-name: Deploy to Pages
-on:
-  push:
-    branches: [main]
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-      - uses: actions/deploy-pages@v4
-        id: deployment
-```
+## 贡献指南
 
-## 功能
+欢迎通过以下方式参与贡献：
 
-- 交互式地图：拖拽平移、滚轮缩放、标记点聚合
-- 10 种标记类型，5 大分类：
-  - 传送点：电话亭、维特海默塔
-  - 收集品：谕石、21 的赠礼、避役的包裹
-  - 任务：异象委托、支线任务
-  - 景点：打卡点、圣地巡礼
-  - 其他：车辆
-- 分类筛选与模糊搜索
-- 详情弹窗：名称、类型、坐标、描述、刷新时间、关联任务、多图轮播
-- 本地进度保存（localStorage）：标记已找到/未找到
-- 仅显示未收集模式
-- 图例面板：各类型图层切换
-- 编辑者模式：在地图上点击添加自定义标记点
-- 响应式布局：桌面端侧栏 + 移动端底部抽屉
+### 方式一：邮件投稿
 
-## 自定义
+将截图与描述发送至 **horizony@foxmail.com**，由维护者统一录入。
 
-### 添加标记点
+- 描述中请注明地点名称、分类（传送点 / 收集品 / 任务 / 景点 / 车辆 / 或许新分类？）及坐标说明
+- 截图需清晰展示目标环境，圣地巡礼类最好加上致敬场景的原图，方便对照
 
-编辑 `src/data/markers.json`，按照以下格式添加：
+### 方式二：本地开发 + PR
 
-```json
-{
-  "id": "unique_id",
-  "name": "标记名称",
-  "type": "phonebooth",
-  "lat": 0.5,
-  "lng": 0.5,
-  "description": "描述文本",
-  "image": "images/example.png",
-  "images": ["images/example-1.png", "images/example-2.png"],
-  "refreshTime": "每日刷新",
-  "relatedQuest": "主线任务·第一章"
-}
-```
+1. `Fork` 本仓库并 `git clone` 到本地
+2. 在编辑者模式下添加标记点
+3. 提交变更文件（`markers-data.json` 及截图资源）至 PR 或发送至 **horizony@foxmail.com**
 
-坐标 `lat` 和 `lng` 为 0~1 的相对坐标，对应地图图片的比例位置。`type` 可选值见 `src/types/index.ts` 中的 `MarkerType` 类型定义。
+### 其他贡献
+
+- **功能改进** &mdash; 打开 Issue 讨论设计方案后再进行开发
+- **Bug 报告** &mdash; 请附上复现步骤、浏览器版本与截图
+
+---
+
+<p align="center">
+  <sub>Made with Vue.js & Leaflet | &copy; 2026 horizony14</sub>
+</p>

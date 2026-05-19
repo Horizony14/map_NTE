@@ -152,7 +152,7 @@ function scrollToList(id: string) {
       <button
         @click="store.sidebarOpen = false"
         class="absolute left-4 z-30 w-9 h-9 rounded-lg bg-surface-800/90 backdrop-blur-md border border-white/10 shadow-lg flex items-center justify-center text-slate-300 hover:text-white hover:border-white/20 transition-all md:hidden"
-        style="top: -1.125rem;"
+        style="top: -1.5rem;"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

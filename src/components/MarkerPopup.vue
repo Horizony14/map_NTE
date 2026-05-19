@@ -176,6 +176,11 @@ function onTouchStart(e: TouchEvent) {
     touchStartX.value = e.touches[0].clientX
     touchStartY.value = e.touches[0].clientY
     swipeHandled.value = false
+    if (previewScale.value > 1) {
+      isPanning.value = true
+      panStart.value = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+      panTranslateStart.value = { ...previewTranslate.value }
+    }
   }
 }
 
@@ -192,13 +197,24 @@ function onTouchMove(e: TouchEvent) {
       )
     }
     swipeHandled.value = true
+  } else if (e.touches.length === 1 && isPanning.value) {
+    e.preventDefault()
+    previewTranslate.value = {
+      x: panTranslateStart.value.x + (e.touches[0].clientX - panStart.value.x),
+      y: panTranslateStart.value.y + (e.touches[0].clientY - panStart.value.y),
+    }
+    swipeHandled.value = true
   }
 }
 
-function onTouchEnd(e: TouchEvent) {
+function onTouchEnd(_e: TouchEvent) {
+  if (isPanning.value) {
+    isPanning.value = false
+    return
+  }
   if (swipeHandled.value || previewScale.value > 1) return
-  const dx = (e.changedTouches[0]?.clientX || 0) - touchStartX.value
-  const dy = (e.changedTouches[0]?.clientY || 0) - touchStartY.value
+  const dx = (_e.changedTouches[0]?.clientX || 0) - touchStartX.value
+  const dy = (_e.changedTouches[0]?.clientY || 0) - touchStartY.value
   if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
     if (dx > 0) prevImage()
     else nextImage()
@@ -316,7 +332,7 @@ watch(previewOpen, (open) => {
             <!-- Description -->
             <p
               v-if="store.selectedMarker.description"
-              class="text-xs text-slate-300 leading-relaxed"
+              class="text-xs text-slate-300 leading-relaxed max-h-[136px] overflow-y-auto"
             >
               {{ store.selectedMarker.description }}
             </p>
@@ -410,7 +426,7 @@ watch(previewOpen, (open) => {
       <div
         v-if="previewOpen"
         ref="previewRef"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm select-none"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm select-none touch-none"
         @click.self="onBackdropClick"
         @wheel.prevent="onPreviewWheel"
         @mousemove="onPanMove"
