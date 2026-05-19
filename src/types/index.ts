@@ -53,8 +53,10 @@ export const MARKER_CATEGORIES: CategoryDef[] = [
 ]
 
 
+import { resolveAssetUrl } from '@/config'
+
 export function getIconUrl(type: MarkerType): string {
-  return `./images/icons/${type}.png`
+  return resolveAssetUrl(`./images/icons/${type}.png`)
 }
 
 export const MARKER_TYPE_CONFIG: Record<

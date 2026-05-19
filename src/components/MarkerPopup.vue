@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { useMarkerStore } from '@/stores/markerStore'
 import { MARKER_TYPE_CONFIG } from '@/types'
+import { resolveAssetUrl } from '@/config'
 
 const store = useMarkerStore()
 
@@ -17,8 +18,8 @@ const allImages = computed(() => {
   const m = store.selectedMarker
   if (!m) return []
   const list: string[] = []
-  if (m.image) list.push('./' + m.image)
-  if (m.images) list.push(...m.images.map((p) => p.startsWith('data:') ? p : './' + p))
+  if (m.image) list.push(resolveAssetUrl('./' + m.image))
+  if (m.images) list.push(...m.images.map((p) => p.startsWith('data:') ? p : resolveAssetUrl('./' + p)))
   return list
 })
 
@@ -305,7 +306,7 @@ watch(previewOpen, (open) => {
             <!-- Name -->
             <div class="flex items-center gap-2">
               <img
-                :src="MARKER_TYPE_CONFIG[store.selectedMarker.type].iconUrl"
+                :src="resolveAssetUrl(MARKER_TYPE_CONFIG[store.selectedMarker.type].iconUrl)"
                 :alt="MARKER_TYPE_CONFIG[store.selectedMarker.type].label"
                 class="w-5 h-5 rounded-full object-cover flex-shrink-0"
               />

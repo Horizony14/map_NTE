@@ -40,7 +40,7 @@ export const useMarkerStore = defineStore('markers', () => {
   const filterMode = ref<'all' | 'unfound'>('all')
   const selectedMarkerId = ref<string | null>(null)
   const selectedMarkerScreenPos = ref<{ x: number; y: number } | null>(null)
-  const sidebarOpen = ref(true)
+  const sidebarOpen = ref(window.innerWidth >= 768)
   const pendingMarkerPos = ref<{ lat: number; lng: number } | null>(null)
   const editingMarkerId = ref<string | null>(null)
 

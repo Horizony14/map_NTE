@@ -3,7 +3,7 @@ import { computed, ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useMarkerStore } from '@/stores/markerStore'
 import { MARKER_TYPE_CONFIG, MARKER_CATEGORIES } from '@/types'
 import type { MarkerType } from '@/types'
-import { EDITOR_ENABLED } from '@/config'
+import { EDITOR_ENABLED, resolveAssetUrl } from '@/config'
 
 const store = useMarkerStore()
 
@@ -272,7 +272,7 @@ function scrollToList(id: string) {
                   :style="store.selectedTypes.has(type) ? { backgroundColor: MARKER_TYPE_CONFIG[type].color + '33', borderColor: MARKER_TYPE_CONFIG[type].color + '66' } : {}"
                 >
                   <img
-                    :src="MARKER_TYPE_CONFIG[type].iconUrl"
+                    :src="resolveAssetUrl(MARKER_TYPE_CONFIG[type].iconUrl)"
                     :alt="MARKER_TYPE_CONFIG[type].label"
                     class="w-3.5 h-3.5 rounded-full object-cover"
                   />
@@ -325,7 +325,7 @@ function scrollToList(id: string) {
               class="flex items-center gap-3 px-4 py-2.5 cursor-pointer hover:bg-white/5 transition-colors border-b border-white/5 select-none -mx-4 max-md:flex-shrink-0 max-md:flex-col max-md:gap-1 max-md:px-2 max-md:py-1.5 max-md:mx-0 max-md:rounded-lg max-md:bg-white/5 max-md:border-b-0 max-md:min-w-[60px] max-md:text-center max-md:hover:bg-white/10"
             >
               <img
-                :src="MARKER_TYPE_CONFIG[item.type].iconUrl"
+                :src="resolveAssetUrl(MARKER_TYPE_CONFIG[item.type].iconUrl)"
                 :alt="MARKER_TYPE_CONFIG[item.type].label"
                 class="w-[18px] h-[18px] rounded-full object-cover flex-shrink-0 max-md:w-6 max-md:h-6"
               />
@@ -371,7 +371,7 @@ function scrollToList(id: string) {
             </svg>
           </button>
           <img
-            :src="MARKER_TYPE_CONFIG[detailType].iconUrl"
+            :src="resolveAssetUrl(MARKER_TYPE_CONFIG[detailType].iconUrl)"
             :alt="MARKER_TYPE_CONFIG[detailType].label"
             class="w-4 h-4 rounded-full object-cover flex-shrink-0"
           />
@@ -393,14 +393,14 @@ function scrollToList(id: string) {
             <!-- Image -->
             <div v-if="m.image || (m.images && m.images.length > 0)" class="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-surface-800">
               <img
-                :src="m.image || (m.images && m.images[0])"
+                :src="m.image ? resolveAssetUrl(m.image) : (m.images && m.images[0] ? resolveAssetUrl(m.images[0]) : undefined)"
                 :alt="m.name"
                 class="w-full h-full object-cover"
               />
             </div>
             <div v-else class="w-16 h-16 rounded-lg flex-shrink-0 bg-surface-800 flex items-center justify-center">
               <img
-                :src="MARKER_TYPE_CONFIG[m.type].iconUrl"
+                :src="resolveAssetUrl(MARKER_TYPE_CONFIG[m.type].iconUrl)"
                 :alt="MARKER_TYPE_CONFIG[m.type].label"
                 class="w-8 h-8 rounded-full object-cover opacity-50"
               />

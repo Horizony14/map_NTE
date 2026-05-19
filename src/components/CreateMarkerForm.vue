@@ -3,6 +3,7 @@ import { ref, watch, computed } from 'vue'
 import { useMarkerStore } from '@/stores/markerStore'
 import { MARKER_TYPE_CONFIG } from '@/types'
 import type { MarkerType } from '@/types'
+import { resolveAssetUrl } from '@/config'
 
 const store = useMarkerStore()
 
@@ -27,11 +28,25 @@ function handleFiles(e: Event) {
   if (!files || files.length === 0) return
 
   for (const file of Array.from(files)) {
-    const reader = new FileReader()
-    reader.onload = () => {
-      images.value = [...images.value, reader.result as string]
+    const img = new Image()
+    img.onload = () => {
+      const canvas = document.createElement('canvas')
+      const MAX = 1920
+      let { width, height } = img
+      if (width > MAX || height > MAX) {
+        const ratio = Math.min(MAX / width, MAX / height)
+        width = Math.round(width * ratio)
+        height = Math.round(height * ratio)
+      }
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')!
+      ctx.drawImage(img, 0, 0, width, height)
+      const webpDataUrl = canvas.toDataURL('image/webp', 0.8)
+      images.value = [...images.value, webpDataUrl]
+      URL.revokeObjectURL(img.src)
     }
-    reader.readAsDataURL(file)
+    img.src = URL.createObjectURL(file)
   }
   input.value = ''
 }
@@ -263,7 +278,7 @@ watch(() => store.pendingMarkerPos, (pos) => {
                   :style="selectedType === type ? { borderColor: MARKER_TYPE_CONFIG[type].color } : {}"
                 >
                   <img
-                    :src="MARKER_TYPE_CONFIG[type].iconUrl"
+                    :src="resolveAssetUrl(MARKER_TYPE_CONFIG[type].iconUrl)"
                     :alt="MARKER_TYPE_CONFIG[type].label"
                     class="w-8 h-8 object-cover"
                   />
@@ -298,7 +313,7 @@ watch(() => store.pendingMarkerPos, (pos) => {
                   @drop="onDrop(idx)"
                   @dragend="dragIndex = null; dragOverIndex = null"
                 >
-                  <img :src="img.startsWith('data:') ? img : './' + img" class="w-full h-full object-cover pointer-events-none" />
+                  <img :src="img.startsWith('data:') ? img : resolveAssetUrl('./' + img)" class="w-full h-full object-cover pointer-events-none" />
                   <!-- Drag handle indicator -->
                   <div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     <svg class="w-4 h-4 text-white/80" fill="currentColor" viewBox="0 0 24 24">
@@ -331,7 +346,7 @@ watch(() => store.pendingMarkerPos, (pos) => {
                   @change="handleFiles"
                 />
               </label>
-              <p class="mt-1 text-xs text-slate-600">图片将保存到 public/images/uploads/ 目录</p>
+              <p class="mt-1 text-xs text-slate-600">图片将自动压缩为 WebP 格式，最大宽度 1920px</p>
             </div>
 
             <!-- Description -->

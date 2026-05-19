@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useMarkerStore } from '@/stores/markerStore'
 import { MARKER_TYPE_CONFIG, MARKER_CATEGORIES } from '@/types'
+import { resolveAssetUrl } from '@/config'
 
 const store = useMarkerStore()
 const expanded = ref(false)
@@ -39,7 +40,7 @@ const expanded = ref(false)
             :class="{ 'opacity-50': !store.selectedTypes.has(type) }"
           >
             <img
-              :src="MARKER_TYPE_CONFIG[type].iconUrl"
+              :src="resolveAssetUrl(MARKER_TYPE_CONFIG[type].iconUrl)"
               :alt="MARKER_TYPE_CONFIG[type].label"
               class="w-[18px] h-[18px] rounded-full object-cover"
             />

@@ -139,9 +139,9 @@
     "lng": 0.3422291705037007,
     "description": "标点教学楼一楼第二间教室处。学校正门无法进入时可从大门附近围栏或学校南面电箱处（图三）进入。时间为早上",
     "images": [
-      "images/uploads/pilgrimage_1.jpeg",
-      "images/uploads/pilgrimage_2.png",
-      "images/uploads/pilgrimage_3.jpeg"
+      "images/uploads/pilgrimage_1.webp",
+      "images/uploads/pilgrimage_2.webp",
+      "images/uploads/pilgrimage_3.webp"
     ],
     "id": "user_1778762299823_1"
   },
@@ -152,7 +152,7 @@
     "lng": 0.5973565358254314,
     "description": "从公交车右侧门上车后即可驾驶",
     "images": [
-      "images/uploads/car_5.png"
+      "images/uploads/car_5.webp"
     ],
     "id": "user_1778764592822_1"
   },
@@ -163,7 +163,7 @@
     "lng": 0.6303175432185963,
     "description": "车门处驾驶",
     "images": [
-      "images/uploads/car_4.png"
+      "images/uploads/car_4.webp"
     ],
     "id": "user_1778765188432_1"
   },
@@ -174,7 +174,7 @@
     "lng": 0.5480411817618228,
     "description": "车门处驾驶",
     "images": [
-      "images/uploads/car_3.png"
+      "images/uploads/car_3.webp"
     ],
     "id": "user_1778765416275_2"
   },
@@ -185,7 +185,7 @@
     "lng": 0.39081378402107914,
     "description": "车门处驾驶",
     "images": [
-      "images/uploads/car_2.png"
+      "images/uploads/car_2.webp"
     ],
     "id": "user_1778765616414_3"
   },
@@ -196,7 +196,7 @@
     "lng": 0.3958190464884626,
     "description": "车辆旁驾驶",
     "images": [
-      "images/uploads/car_1.png"
+      "images/uploads/car_1.webp"
     ],
     "id": "user_1778765736205_4"
   },
@@ -206,8 +206,8 @@
     "lat": 0.5275312484298899,
     "lng": 0.3102442049409812,
     "images": [
-      "images/uploads/pilgrimage_4.jpeg",
-      "images/uploads/pilgrimage_5.png"
+      "images/uploads/pilgrimage_4.webp",
+      "images/uploads/pilgrimage_5.webp"
     ],
     "id": "user_1778853186830_1"
   },
@@ -217,9 +217,9 @@
     "lat": 0.5497510092304783,
     "lng": 0.3435719276702771,
     "images": [
-      "images/uploads/pilgrimage_6.png",
-      "images/uploads/pilgrimage_7.png",
-      "images/uploads/pilgrimage_8.png"
+      "images/uploads/pilgrimage_6.webp",
+      "images/uploads/pilgrimage_7.webp",
+      "images/uploads/pilgrimage_8.webp"
     ],
     "id": "user_1778853993315_2"
   },
@@ -230,8 +230,8 @@
     "lng": 0.565191979313455,
     "description": "此处为异象委托“天弃之子”处，还有多出楼顶都有类似景观",
     "images": [
-      "images/uploads/pilgrimage_9.png",
-      "images/uploads/pilgrimage_10.png"
+      "images/uploads/pilgrimage_9.webp",
+      "images/uploads/pilgrimage_10.webp"
     ],
     "id": "user_1778855467984_3"
   },
@@ -242,10 +242,10 @@
     "lng": 0.5243580821773419,
     "description": "大雄家和经典的水泥管空地，戴眼镜的黄衣男孩和蓝色的猫一眼就能认出",
     "images": [
-      "images/uploads/pilgrimage_11.jpeg",
-      "images/uploads/pilgrimage_14.png",
-      "images/uploads/pilgrimage_12.png",
-      "images/uploads/pilgrimage_13.png"
+      "images/uploads/pilgrimage_11.webp",
+      "images/uploads/pilgrimage_14.webp",
+      "images/uploads/pilgrimage_12.webp",
+      "images/uploads/pilgrimage_13.webp"
     ],
     "id": "user_1778903874186_1"
   },
@@ -256,8 +256,8 @@
     "lng": 0.5324759423623925,
     "description": "小新的家",
     "images": [
-      "images/uploads/pilgrimage_15.jpeg",
-      "images/uploads/pilgrimage_16.png"
+      "images/uploads/pilgrimage_15.webp",
+      "images/uploads/pilgrimage_16.webp"
     ],
     "id": "user_1778909024268_2"
   },
@@ -268,8 +268,8 @@
     "lng": 0.5371147660993458,
     "description": "种满蓝色绣球花的二层小楼",
     "images": [
-      "images/uploads/pilgrimage_17.png",
-      "images/uploads/pilgrimage_18.png"
+      "images/uploads/pilgrimage_17.webp",
+      "images/uploads/pilgrimage_18.webp"
     ],
     "id": "user_1778909730661_3"
   },
@@ -280,8 +280,8 @@
     "lng": 0.5347140769364506,
     "description": "富士电视台",
     "images": [
-      "images/uploads/pilgrimage_19.jpeg",
-      "images/uploads/pilgrimage_20.png"
+      "images/uploads/pilgrimage_19.webp",
+      "images/uploads/pilgrimage_20.webp"
     ],
     "id": "user_1778910243612_4"
   },
@@ -292,8 +292,8 @@
     "lng": 0.374013431487309,
     "description": "太一家楼下",
     "images": [
-      "images/uploads/pilgrimage_21.png",
-      "images/uploads/pilgrimage_22.png"
+      "images/uploads/pilgrimage_21.webp",
+      "images/uploads/pilgrimage_22.webp"
     ],
     "id": "user_1778912718149_5"
   },
@@ -304,8 +304,8 @@
     "lng": 0.6048643047827592,
     "description": "落樱缤纷的坡道 樱下古河",
     "images": [
-      "images/uploads/pilgrimage_23.png",
-      "images/uploads/pilgrimage_24.png"
+      "images/uploads/pilgrimage_23.webp",
+      "images/uploads/pilgrimage_24.webp"
     ],
     "id": "user_1778914088010_6"
   },
@@ -316,8 +316,8 @@
     "lng": 0.5144861766468996,
     "description": "金色花田 花田汐",
     "images": [
-      "images/uploads/pilgrimage_25.png",
-      "images/uploads/pilgrimage_26.png"
+      "images/uploads/pilgrimage_25.webp",
+      "images/uploads/pilgrimage_26.webp"
     ],
     "id": "user_1778914927996_7"
   },
@@ -328,8 +328,8 @@
     "lng": 0.6134089066629288,
     "description": "侦探坡",
     "images": [
-      "images/uploads/pilgrimage_27.png",
-      "images/uploads/pilgrimage_28.png"
+      "images/uploads/pilgrimage_27.webp",
+      "images/uploads/pilgrimage_28.webp"
     ],
     "id": "user_1778916632983_8"
   },
@@ -340,9 +340,9 @@
     "lng": 0.3414487658391757,
     "description": "水上列车",
     "images": [
-      "images/uploads/pilgrimage_29.png",
-      "images/uploads/pilgrimage_30.png",
-      "images/uploads/pilgrimage_31.png"
+      "images/uploads/pilgrimage_29.webp",
+      "images/uploads/pilgrimage_30.webp",
+      "images/uploads/pilgrimage_31.webp"
     ],
     "id": "user_1778916982901_9"
   },
@@ -353,10 +353,10 @@
     "lng": 0.35083728232335426,
     "description": "车站与向日葵",
     "images": [
-      "images/uploads/pilgrimage_32.png",
-      "images/uploads/pilgrimage_33.png",
-      "images/uploads/pilgrimage_34.png",
-      "images/uploads/pilgrimage_35.png"
+      "images/uploads/pilgrimage_32.webp",
+      "images/uploads/pilgrimage_33.webp",
+      "images/uploads/pilgrimage_34.webp",
+      "images/uploads/pilgrimage_35.webp"
     ],
     "id": "user_1778917681583_10"
   },
@@ -366,8 +366,8 @@
     "lat": 0.4371403520405885,
     "lng": 0.4252373301167371,
     "images": [
-      "images/uploads/pilgrimage_38.png",
-      "images/uploads/pilgrimage_37.png"
+      "images/uploads/pilgrimage_38.webp",
+      "images/uploads/pilgrimage_37.webp"
     ],
     "id": "user_1778919676424_11"
   },
@@ -378,9 +378,9 @@
     "lng": 0.5664220433527685,
     "description": "晚上于大樱花树下触发",
     "images": [
-      "images/uploads/pilgrimage_39.png",
-      "images/uploads/pilgrimage_41.png",
-      "images/uploads/pilgrimage_40.png"
+      "images/uploads/pilgrimage_39.webp",
+      "images/uploads/pilgrimage_41.webp",
+      "images/uploads/pilgrimage_40.webp"
     ],
     "id": "user_1778920925472_12"
   },
@@ -390,8 +390,8 @@
     "lat": 0.5156957737688974,
     "lng": 0.37079439378575013,
     "images": [
-      "images/uploads/pilgrimage_43.png",
-      "images/uploads/pilgrimage_44.png"
+      "images/uploads/pilgrimage_43.webp",
+      "images/uploads/pilgrimage_44.webp"
     ],
     "id": "user_1778923104975_13"
   },
@@ -401,8 +401,8 @@
     "lat": 0.6602214311235909,
     "lng": 0.49616104946182793,
     "images": [
-      "images/uploads/pilgrimage_45.png",
-      "images/uploads/pilgrimage_46.png"
+      "images/uploads/pilgrimage_45.webp",
+      "images/uploads/pilgrimage_46.webp"
     ],
     "id": "user_1778923755975_14"
   },
@@ -412,8 +412,8 @@
     "lat": 0.45942519277386384,
     "lng": 0.4450672612454551,
     "images": [
-      "images/uploads/pilgrimage_47.png",
-      "images/uploads/pilgrimage_48.png"
+      "images/uploads/pilgrimage_47.webp",
+      "images/uploads/pilgrimage_48.webp"
     ],
     "id": "user_1778978968126_1"
   },
@@ -424,8 +424,8 @@
     "lng": 0.47040336201266064,
     "description": "今天的风儿甚是喧嚣",
     "images": [
-      "images/uploads/pilgrimage_49.png",
-      "images/uploads/pilgrimage_50.png"
+      "images/uploads/pilgrimage_49.webp",
+      "images/uploads/pilgrimage_50.webp"
     ],
     "id": "user_1778979551831_2"
   },
@@ -436,8 +436,8 @@
     "lng": 0.5100756495164765,
     "description": "企鹅大王公园",
     "images": [
-      "images/uploads/pilgrimage_51.png",
-      "images/uploads/pilgrimage_52.png"
+      "images/uploads/pilgrimage_51.webp",
+      "images/uploads/pilgrimage_52.webp"
     ],
     "id": "user_1778979958443_3"
   },
@@ -448,8 +448,8 @@
     "lng": 0.3999075450219041,
     "description": "通往神社的路",
     "images": [
-      "images/uploads/pilgrimage_53.jpeg",
-      "images/uploads/pilgrimage_54.png"
+      "images/uploads/pilgrimage_53.webp",
+      "images/uploads/pilgrimage_54.webp"
     ],
     "id": "user_1778980483894_4"
   },
@@ -460,8 +460,8 @@
     "lng": 0.4422058737112865,
     "description": "石中剑 位于照相馆三楼",
     "images": [
-      "images/uploads/pilgrimage_55.png",
-      "images/uploads/pilgrimage_56.png"
+      "images/uploads/pilgrimage_55.webp",
+      "images/uploads/pilgrimage_56.webp"
     ],
     "id": "user_1778981208748_5"
   },
@@ -472,8 +472,8 @@
     "lng": 0.4432435635694368,
     "description": "早上好 中午好 晚上好 位于照相馆三楼",
     "images": [
-      "images/uploads/pilgrimage_57.png",
-      "images/uploads/pilgrimage_58.png"
+      "images/uploads/pilgrimage_57.webp",
+      "images/uploads/pilgrimage_58.webp"
     ],
     "id": "user_1778981259249_6"
   },
@@ -484,8 +484,8 @@
     "lng": 0.4654727708260315,
     "description": "日本神户大桥",
     "images": [
-      "images/uploads/pilgrimage_59.png",
-      "images/uploads/pilgrimage_60.png"
+      "images/uploads/pilgrimage_59.webp",
+      "images/uploads/pilgrimage_60.webp"
     ],
     "id": "user_1778991054024_7"
   },
@@ -496,7 +496,7 @@
     "lng": 0.5067735343045588,
     "description": "又到了白色相簿的季节",
     "images": [
-      "images/uploads/pilgrimage_61.png"
+      "images/uploads/pilgrimage_61.webp"
     ],
     "id": "user_1778991606817_1"
   },
@@ -506,9 +506,9 @@
     "lat": 0.37181858582068406,
     "lng": 0.33840904984831427,
     "images": [
-      "images/uploads/pilgrimage_62.png",
-      "images/uploads/pilgrimage_63.png",
-      "images/uploads/pilgrimage_64.png"
+      "images/uploads/pilgrimage_62.webp",
+      "images/uploads/pilgrimage_63.webp",
+      "images/uploads/pilgrimage_64.webp"
     ],
     "id": "user_1778991953051_2"
   },
@@ -519,8 +519,8 @@
     "lng": 0.4169464032746608,
     "description": "大吉山",
     "images": [
-      "images/uploads/pilgrimage_65.png",
-      "images/uploads/pilgrimage_66.png"
+      "images/uploads/pilgrimage_65.webp",
+      "images/uploads/pilgrimage_66.webp"
     ],
     "id": "user_1778993053169_3"
   },
@@ -530,8 +530,8 @@
     "lat": 0.46125229089699793,
     "lng": 0.4943900590988044,
     "images": [
-      "images/uploads/pilgrimage_67.png",
-      "images/uploads/pilgrimage_68.png"
+      "images/uploads/pilgrimage_67.webp",
+      "images/uploads/pilgrimage_68.webp"
     ],
     "id": "user_1778993523945_4"
   },
@@ -541,8 +541,8 @@
     "lat": 0.459543800509596,
     "lng": 0.49567191127651944,
     "images": [
-      "images/uploads/pilgrimage_69.png",
-      "images/uploads/pilgrimage_70.png"
+      "images/uploads/pilgrimage_69.webp",
+      "images/uploads/pilgrimage_70.webp"
     ],
     "id": "user_1778993590956_5"
   },
@@ -554,7 +554,7 @@
     "description": "警告",
     "images": [
       "images/uploads/pilgrimage_71.webp",
-      "images/uploads/pilgrimage_72.png"
+      "images/uploads/pilgrimage_72.webp"
     ],
     "id": "user_1778994251874_6"
   },
@@ -565,8 +565,8 @@
     "lng": 0.6147025161450149,
     "description": "副本海囚内，第一次需要从旁边海底隧道内触发",
     "images": [
-      "images/uploads/pilgrimage_73.png",
-      "images/uploads/pilgrimage_74.png"
+      "images/uploads/pilgrimage_73.webp",
+      "images/uploads/pilgrimage_74.webp"
     ],
     "id": "user_1778994541940_7"
   },
@@ -577,9 +577,9 @@
     "lng": 0.3281544557915585,
     "description": "第一次需要夜间开车经过右侧隧道外（电话亭右侧路口）触发",
     "images": [
-      "images/uploads/pilgrimage_75.png",
-      "images/uploads/pilgrimage_76.png",
-      "images/uploads/pilgrimage_77.png"
+      "images/uploads/pilgrimage_75.webp",
+      "images/uploads/pilgrimage_76.webp",
+      "images/uploads/pilgrimage_77.webp"
     ],
     "id": "user_1778995040032_8"
   },
@@ -590,8 +590,8 @@
     "lng": 0.5601859792308692,
     "description": "江边还有《现视社》《坂本日常》《爱天使传说》《狼与香辛料》《夏目友人帐》《拉面赤猫》《迷糊餐厅》《中华小当家》《胆大党》《向阳素描》等等的各种广告招牌彩蛋",
     "images": [
-      "images/uploads/pilgrimage_78.jpeg",
-      "images/uploads/pilgrimage_79.png"
+      "images/uploads/pilgrimage_78.webp",
+      "images/uploads/pilgrimage_79.webp"
     ],
     "id": "user_1778995974302_9"
   },
@@ -601,8 +601,8 @@
     "lat": 0.6381146378297254,
     "lng": 0.4991975742806732,
     "images": [
-      "images/uploads/pilgrimage_80.png",
-      "images/uploads/pilgrimage_81.png"
+      "images/uploads/pilgrimage_80.webp",
+      "images/uploads/pilgrimage_81.webp"
     ],
     "id": "user_1778996627816_10"
   },
@@ -613,8 +613,8 @@
     "lng": 0.3960427536464689,
     "description": "折千！",
     "images": [
-      "images/uploads/pilgrimage_82.png",
-      "images/uploads/pilgrimage_83.png"
+      "images/uploads/pilgrimage_82.webp",
+      "images/uploads/pilgrimage_83.webp"
     ],
     "id": "user_1778999036817_11"
   },
@@ -625,8 +625,8 @@
     "lng": 0.32475737587018044,
     "description": "塞润尼缇处，无法进入请先推进主线",
     "images": [
-      "images/uploads/pilgrimage_84.png",
-      "images/uploads/pilgrimage_85.png"
+      "images/uploads/pilgrimage_84.webp",
+      "images/uploads/pilgrimage_85.webp"
     ],
     "id": "user_1778999288158_12"
   },
@@ -637,8 +637,8 @@
     "lng": 0.4540455116700064,
     "description": "拖车艄，地图多处会刷新，可通过异象追踪寻找",
     "images": [
-      "images/uploads/pilgrimage_86.png",
-      "images/uploads/pilgrimage_87.png"
+      "images/uploads/pilgrimage_86.webp",
+      "images/uploads/pilgrimage_87.webp"
     ],
     "id": "user_1778999828003_13"
   },
@@ -649,8 +649,8 @@
     "lng": 0.3659104314738172,
     "description": "电玩城内",
     "images": [
-      "images/uploads/pilgrimage_88.png",
-      "images/uploads/pilgrimage_89.png"
+      "images/uploads/pilgrimage_88.webp",
+      "images/uploads/pilgrimage_89.webp"
     ],
     "id": "user_1779000248026_14"
   },
@@ -660,8 +660,8 @@
     "lat": 0.7036190150346203,
     "lng": 0.49066740269526177,
     "images": [
-      "images/uploads/pilgrimage_90.png",
-      "images/uploads/pilgrimage_91.png"
+      "images/uploads/pilgrimage_90.webp",
+      "images/uploads/pilgrimage_91.webp"
     ],
     "id": "user_1779000575595_15"
   },
@@ -672,8 +672,8 @@
     "lng": 0.4351835494396147,
     "description": "豆腐店和86",
     "images": [
-      "images/uploads/pilgrimage_92.jpeg",
-      "images/uploads/pilgrimage_93.png"
+      "images/uploads/pilgrimage_92.webp",
+      "images/uploads/pilgrimage_93.webp"
     ],
     "id": "user_1779001310304_16"
   },
@@ -684,8 +684,8 @@
     "lng": 0.39557436349934333,
     "description": "月关当铺剧情 同名副本",
     "images": [
-      "images/uploads/pilgrimage_94.png",
-      "images/uploads/pilgrimage_95.png"
+      "images/uploads/pilgrimage_94.webp",
+      "images/uploads/pilgrimage_95.webp"
     ],
     "id": "user_1779001721885_17"
   },
@@ -696,10 +696,10 @@
     "lng": 0.34284018375042624,
     "description": "门口有四小只的海报，livehouse里的乐器、海报还包含《轻音少女》《化物语》《摇滚乃是淑女的爱好》《佐贺偶像是传奇》《BECK》《RAISE A AUILEN》《Poppin'Party》《AKB48》《Girls Band Cry》《叹息的亡灵想退隐》《Ave母鸡卡》《初音未来》等彩蛋，此处支线中还演唱了《It's MyGO！！！！！》中的歌曲迷星叫，演唱人员与孤独摇滚四人同配色，并使用了GIRLS BAND CRY中的姿势与分镜",
     "images": [
-      "images/uploads/pilgrimage_96.png",
-      "images/uploads/pilgrimage_97.png",
-      "images/uploads/pilgrimage_98.png",
-      "images/uploads/pilgrimage_99.png"
+      "images/uploads/pilgrimage_96.webp",
+      "images/uploads/pilgrimage_97.webp",
+      "images/uploads/pilgrimage_98.webp",
+      "images/uploads/pilgrimage_99.webp"
     ],
     "id": "user_1779010988759_18"
   },
@@ -710,8 +710,8 @@
     "lng": 0.439152613550176,
     "description": "时间机器",
     "images": [
-      "images/uploads/pilgrimage_100.png",
-      "images/uploads/pilgrimage_101.png"
+      "images/uploads/pilgrimage_100.webp",
+      "images/uploads/pilgrimage_101.webp"
     ],
     "id": "user_1779011974176_19"
   },
@@ -722,7 +722,7 @@
     "lng": 0.4296921860259908,
     "description": "Mr Brown",
     "images": [
-      "images/uploads/pilgrimage_102.png"
+      "images/uploads/pilgrimage_102.webp"
     ],
     "id": "user_1779012337050_20"
   }

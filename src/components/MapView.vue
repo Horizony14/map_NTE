@@ -5,6 +5,7 @@ import 'leaflet.markercluster'
 import { useMarkerStore } from '@/stores/markerStore'
 import { MARKER_TYPE_CONFIG } from '@/types'
 import type { MarkerData } from '@/types'
+import { resolveAssetUrl } from '@/config'
 
 const store = useMarkerStore()
 
@@ -20,12 +21,12 @@ const hoverPreviewImg = computed(() => {
   const m = hoveredMarker.value
   if (!m) return null
   const firstFromList = m.images?.[0]
-  if (firstFromList) return firstFromList.startsWith('data:') ? firstFromList : './' + firstFromList
-  if (m.image) return './' + m.image
+  if (firstFromList) return firstFromList.startsWith('data:') ? firstFromList : resolveAssetUrl('./' + firstFromList)
+  if (m.image) return resolveAssetUrl('./' + m.image)
   return null
 })
 
-const mapImgPath = './map-base.png'
+const mapImgPath = resolveAssetUrl('./map-base.png')
 
 function computeBounds(imgW: number, imgH: number): L.LatLngBoundsLiteral {
   const ratio = imgW / imgH
@@ -48,7 +49,7 @@ function loadImageDimensions(url: string): Promise<{ w: number; h: number }> {
 function createMarkerIcon(m: MarkerData, found: boolean): L.DivIcon {
   const cfg = MARKER_TYPE_CONFIG[m.type]
   const size = 36
-  const imgSrc = cfg.iconUrl
+  const imgSrc = resolveAssetUrl(cfg.iconUrl)
 
   return L.divIcon({
     className: `custom-marker${found ? ' found' : ''}`,
