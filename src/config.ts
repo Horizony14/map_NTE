@@ -11,5 +11,5 @@ const GITHUB_BRANCH = 'main'
 export function resolveAssetUrl(relativePath: string): string {
   if (!JSDELIVR_CDN_ENABLED) return relativePath
   const cleanPath = relativePath.startsWith('./') ? relativePath.slice(2) : relativePath
-  return `https://cdn.jsdelivr.net/gh/${GITHUB_USER}/${GITHUB_REPO}@${GITHUB_BRANCH}/public/${cleanPath}`
+  return `https://cdn.jsdmirror.com/gh/${GITHUB_USER}/${GITHUB_REPO}@${GITHUB_BRANCH}/public/${cleanPath}`
 }
