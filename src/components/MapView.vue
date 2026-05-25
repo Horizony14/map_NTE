@@ -3,7 +3,7 @@ import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import L from 'leaflet'
 import 'leaflet.markercluster'
 import { useMarkerStore } from '@/stores/markerStore'
-import { MARKER_TYPE_CONFIG } from '@/types'
+import { MARKER_TYPE_CONFIG, getPrimaryType, getOverlayTypes, isEnemyClearingType } from '@/types'
 import type { MarkerData } from '@/types'
 import { resolveAssetUrl } from '@/config'
 
@@ -47,18 +47,47 @@ function loadImageDimensions(url: string): Promise<{ w: number; h: number }> {
 }
 
 function createMarkerIcon(m: MarkerData, found: boolean): L.DivIcon {
-  const cfg = MARKER_TYPE_CONFIG[m.type]
+  const primaryType = getPrimaryType(m.types, store.selectedTypes)
+  const overlayTypes = getOverlayTypes(m.types, store.selectedTypes)
+  const cfg = MARKER_TYPE_CONFIG[primaryType]
   const size = 36
   const imgSrc = resolveAssetUrl(cfg.iconUrl)
-  const hasCount = m.count !== undefined && m.count > 0
+
+  // Calculate count: sum counts of viewed enemy-clearing types
+  let displayCount = 0
+  if (m.counts) {
+    for (const t of m.types) {
+      if (store.selectedTypes.has(t) && isEnemyClearingType(t)) {
+        displayCount += m.counts[t] || 0
+      }
+    }
+  }
+
+  const overlayIconSize = 16
+  const overlayGap = 2
+  const overlayTrackLeft = size - overlayIconSize // pin left edge so icons fan out to the right
+  const overlaysHtml = overlayTypes.length > 0
+    ? `<div class="marker-overlay-track" style="position:absolute;top:0;left:${overlayTrackLeft}px;height:${overlayIconSize}px;width:${overlayIconSize}px;overflow:hidden;transition:width 0.25s ease;border-radius:7px">
+        <div style="display:flex;gap:${overlayGap}px;height:${overlayIconSize}px">
+          ${overlayTypes.map(t => `<img src="${resolveAssetUrl(MARKER_TYPE_CONFIG[t].iconUrl)}" style="width:${overlayIconSize}px;height:${overlayIconSize}px;border-radius:50%;object-fit:cover;flex-shrink:0;box-shadow:0 1px 3px rgba(0,0,0,0.5)" />`).join('')}
+        </div>
+      </div>`
+    : ''
+
+  const totalOverlayWidth = overlayTypes.length > 0
+    ? overlayTypes.length * overlayIconSize + (overlayTypes.length - 1) * overlayGap
+    : 0
 
   return L.divIcon({
     className: `custom-marker${found ? ' found' : ''}`,
     html: `
-      <div style="position:relative;width:${size}px;height:${size}px">
+      <div style="position:relative;width:${size}px;height:${size}px"
+        ${overlayTypes.length > 1 ? `onmouseover="const t=this.querySelector('.marker-overlay-track');if(t)t.style.width='${totalOverlayWidth}px'" onmouseout="const t=this.querySelector('.marker-overlay-track');if(t)t.style.width='${overlayIconSize}px'"` : ''}
+      >
         <img src="${imgSrc}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;object-position:center;box-shadow:0 2px 6px rgba(0,0,0,0.45)" />
+        ${overlaysHtml}
         ${found ? `<svg width="${size}" height="${size}" viewBox="0 0 36 36" style="position:absolute;top:0;left:0;pointer-events:none"><circle cx="31" cy="7" r="4.5" fill="#22c55e" stroke="white" stroke-width="1.5"/><path d="M28.5 7 l2 2 l4-4" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>` : ''}
-        ${hasCount ? `<svg width="${size}" height="${size}" viewBox="0 0 36 36" style="position:absolute;top:0;left:0;pointer-events:none"><circle cx="30" cy="30" r="6" fill="#f0441c"/><text x="30" y="32.5" text-anchor="middle" fill="white" font-size="9" font-weight="bold">${m.count}</text></svg>` : ''}
+        ${displayCount > 0 ? `<svg width="${size}" height="${size}" viewBox="0 0 36 36" style="position:absolute;top:0;left:0;pointer-events:none"><circle cx="30" cy="30" r="6" fill="#f0441c"/><text x="30" y="32.5" text-anchor="middle" fill="white" font-size="9" font-weight="bold">${displayCount}</text></svg>` : ''}
       </div>`,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
@@ -302,4 +331,5 @@ defineExpose({ flyToMarker })
 .hover-card-leave-to {
   opacity: 0;
 }
+
 </style>

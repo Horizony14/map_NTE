@@ -59,6 +59,18 @@ const previewSrc = computed(() => {
   return ''
 })
 const isDirectPreview = computed(() => previewDirectUrl.value !== null)
+const popupPrimaryType = computed(() => {
+  const m = store.selectedMarker
+  return m ? m.types[0] : null
+})
+
+const popupTypeStats = computed(() => {
+  const m = store.selectedMarker
+  if (!m) return null
+  const primary = m.types[0]
+  return primary ? store.typeStats[primary] : null
+})
+
 const relatedItems = computed(() => {
   const m = store.selectedMarker
   if (!m || !m.relatedItems || m.relatedItems.length === 0) return []
@@ -312,7 +324,7 @@ watch(previewOpen, (open) => {
               >
             <div
               v-if="allImages.length === 1"
-              class="w-full aspect-video cursor-pointer"
+              class="w-full aspect-video cursor-pointer relative"
               @click="openPreviewAt(0)"
             >
               <img
@@ -321,6 +333,18 @@ watch(previewOpen, (open) => {
                 class="w-full h-full object-cover"
                 @error="($event.target as HTMLImageElement).style.display = 'none'"
               />
+              <!-- Frosted glass fade overlay -->
+              <div class="absolute inset-x-0 bottom-0 h-16 pointer-events-none frosted-fade"></div>
+              <!-- Icon + Name overlay at bottom-left -->
+              <div class="absolute bottom-2 left-3 flex items-center gap-2">
+                <img
+                  v-if="popupPrimaryType"
+                  :src="resolveAssetUrl(MARKER_TYPE_CONFIG[popupPrimaryType].iconUrl)"
+                  :alt="MARKER_TYPE_CONFIG[popupPrimaryType].label"
+                  class="w-5 h-5 rounded-full object-cover flex-shrink-0"
+                />
+                <h3 class="text-base font-bold text-white truncate">{{ store.selectedMarker.name }}</h3>
+              </div>
             </div>
             <div
               v-else
@@ -346,28 +370,18 @@ watch(previewOpen, (open) => {
 
           <!-- Content -->
           <div class="p-3 space-y-2">
-            <!-- Name -->
-            <div class="flex items-center gap-2">
+            <!-- Name (hidden when single-image overlay shows it) -->
+            <div v-if="allImages.length !== 1" class="flex items-center gap-2">
               <img
-                :src="resolveAssetUrl(MARKER_TYPE_CONFIG[store.selectedMarker.type].iconUrl)"
-                :alt="MARKER_TYPE_CONFIG[store.selectedMarker.type].label"
+                v-if="popupPrimaryType"
+                :src="resolveAssetUrl(MARKER_TYPE_CONFIG[popupPrimaryType].iconUrl)"
+                :alt="MARKER_TYPE_CONFIG[popupPrimaryType].label"
                 class="w-5 h-5 rounded-full object-cover flex-shrink-0"
               />
               <h3 class="text-base font-bold text-white truncate">{{ store.selectedMarker.name }}</h3>
             </div>
 
-            <!-- Count -->
-            <div
-              v-if="store.selectedMarker.count !== undefined && store.selectedMarker.count > 0"
-              class="flex items-center gap-1.5 text-xs"
-            >
-              <span class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-red-500/20 text-red-400 font-bold text-xs">
-                {{ store.selectedMarker.count }}
-              </span>
-              <span class="text-slate-500">数量</span>
-            </div>
-
-            <!-- Description -->
+<!-- Description -->
             <p
               v-if="store.selectedMarker.description"
               class="text-xs text-slate-300 leading-relaxed max-h-[136px] overflow-y-auto"
@@ -379,7 +393,7 @@ watch(previewOpen, (open) => {
             <div
               v-if="store.selectedMarker.refreshTime"
               class="flex items-center gap-1.5 text-xs"
-              :style="{ color: MARKER_TYPE_CONFIG[store.selectedMarker.type].color }"
+              :style="popupPrimaryType ? { color: MARKER_TYPE_CONFIG[popupPrimaryType].color } : {}"
             >
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -438,20 +452,55 @@ watch(previewOpen, (open) => {
               </button>
             </template>
 
-            <!-- Bottom bar (viewer mode): type label + progress + action button -->
-            <div v-else class="flex items-center gap-2 pt-1">
-              <span
-                class="inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded-full flex-shrink-0"
-                :style="{
-                  backgroundColor: MARKER_TYPE_CONFIG[store.selectedMarker.type].bgColor,
-                  color: MARKER_TYPE_CONFIG[store.selectedMarker.type].color,
-                }"
+            <!-- Bottom bar (viewer mode): type badges + found button -->
+            <div v-else class="flex items-center gap-2 mt-1 min-w-0">
+              <!-- Single type: compact label + stats -->
+              <template v-if="store.selectedMarker.types.length === 1 && popupPrimaryType">
+                <span
+                  class="relative inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded-full flex-shrink-0"
+                  :style="{
+                    backgroundColor: MARKER_TYPE_CONFIG[popupPrimaryType].bgColor,
+                    color: MARKER_TYPE_CONFIG[popupPrimaryType].color,
+                  }"
+                >
+                  {{ MARKER_TYPE_CONFIG[popupPrimaryType].label }}
+                  <span
+                    v-if="store.selectedMarker.counts?.[popupPrimaryType]"
+                    class="absolute -top-1 -right-1 inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-red-500 text-white text-[9px] font-bold leading-none"
+                  >{{ store.selectedMarker.counts[popupPrimaryType] }}</span>
+                </span>
+                <span v-if="popupTypeStats" class="text-xs text-slate-500 font-mono flex-shrink-0">
+                  {{ popupTypeStats.found }}/{{ popupTypeStats.total }}
+                </span>
+              </template>
+              <!-- Multi-type: scrollable badges -->
+              <div
+                v-else
+                class="flex gap-1 overflow-x-auto no-scrollbar min-w-0 flex-1 py-1.5"
+                @wheel.prevent="($event.currentTarget as HTMLElement).scrollLeft += $event.deltaY"
               >
-                {{ MARKER_TYPE_CONFIG[store.selectedMarker.type].label }}
-              </span>
-              <span class="text-xs text-slate-500 font-mono flex-shrink-0">
-                {{ store.typeStats[store.selectedMarker.type].found }}/{{ store.typeStats[store.selectedMarker.type].total }}
-              </span>
+                <span
+                  v-for="t in store.selectedMarker.types"
+                  :key="t"
+                  class="relative inline-flex items-center gap-1 px-1.5 py-0.5 text-xs rounded-full border flex-shrink-0"
+                  :style="{
+                    backgroundColor: MARKER_TYPE_CONFIG[t].bgColor,
+                    color: MARKER_TYPE_CONFIG[t].color,
+                    borderColor: MARKER_TYPE_CONFIG[t].color + '44',
+                  }"
+                >
+                  <img
+                    :src="resolveAssetUrl(MARKER_TYPE_CONFIG[t].iconUrl)"
+                    :alt="MARKER_TYPE_CONFIG[t].label"
+                    class="w-3 h-3 rounded-full object-cover"
+                  />
+                  {{ MARKER_TYPE_CONFIG[t].label }}
+                  <span
+                    v-if="store.selectedMarker.counts?.[t]"
+                    class="absolute -top-1 -right-1 inline-flex items-center justify-center w-3.5 h-3.5 rounded-full bg-red-500 text-white text-[9px] font-bold leading-none"
+                  >{{ store.selectedMarker.counts[t] }}</span>
+                </span>
+              </div>
               <button
                 @click="store.toggleFound(store.selectedMarker!.id)"
                 class="ml-auto py-1 px-2.5 rounded-lg text-xs font-medium transition-all flex items-center gap-1 flex-shrink-0"
@@ -593,6 +642,14 @@ watch(previewOpen, (open) => {
 .popup-enter-from > div:nth-child(2),
 .popup-leave-to > div:nth-child(2) {
   opacity: 0;
+}
+
+.frosted-fade {
+  background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  mask-image: linear-gradient(to top, black 25%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, black 25%, transparent 100%);
 }
 
 .no-scrollbar::-webkit-scrollbar {

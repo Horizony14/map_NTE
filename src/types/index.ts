@@ -17,6 +17,23 @@ export type MarkerType =
 export interface MarkerData {
   id: string
   name: string
+  types: MarkerType[]
+  lat: number
+  lng: number
+  description?: string
+  image?: string
+  images?: string[]
+  refreshTime?: string
+  relatedQuest?: string
+  relatedItems?: string[]
+  counts?: Record<string, number>
+  isUserCreated?: boolean
+}
+
+/** Legacy single-type format for migration */
+export interface LegacyMarkerData {
+  id: string
+  name: string
   type: MarkerType
   lat: number
   lng: number
@@ -28,6 +45,32 @@ export interface MarkerData {
   relatedItems?: string[]
   count?: number
   isUserCreated?: boolean
+  counts?: Record<string, number>
+  types?: MarkerType[]
+}
+
+export function migrateMarker(raw: LegacyMarkerData): MarkerData {
+  const types: MarkerType[] = raw.types ?? (raw.type ? [raw.type] : ['phonebooth'])
+  let counts: Record<string, number> | undefined = raw.counts
+  if (!counts && raw.count !== undefined && raw.count > 0) {
+    const ec = types.find(t => ENEMY_CLEARING_TYPES.includes(t))
+    if (ec) counts = { [ec]: raw.count }
+  }
+  return {
+    id: raw.id,
+    name: raw.name,
+    types,
+    lat: raw.lat,
+    lng: raw.lng,
+    description: raw.description,
+    image: raw.image,
+    images: raw.images,
+    refreshTime: raw.refreshTime,
+    relatedQuest: raw.relatedQuest,
+    relatedItems: raw.relatedItems,
+    counts,
+    isUserCreated: raw.isUserCreated,
+  }
 }
 
 export interface ItemData {
@@ -66,6 +109,26 @@ export const ALL_MARKER_TYPES: MarkerType[] = [
 export interface CategoryDef {
   label: string
   types: MarkerType[]
+}
+
+export const ENEMY_CLEARING_TYPES: MarkerType[] = ['pyz', 'msz', 'fdz', 'dyz']
+
+export function isEnemyClearingType(type: MarkerType): boolean {
+  return (ENEMY_CLEARING_TYPES as MarkerType[]).includes(type)
+}
+
+export function getEnemyClearingTypes(types: MarkerType[]): MarkerType[] {
+  return types.filter(t => isEnemyClearingType(t))
+}
+
+export function getPrimaryType(types: MarkerType[], selectedTypes: Set<MarkerType>): MarkerType {
+  return types.find(t => selectedTypes.has(t)) || types[0]
+}
+
+export function getOverlayTypes(types: MarkerType[], selectedTypes: Set<MarkerType>): MarkerType[] {
+  const allMatching = types.filter(t => selectedTypes.has(t))
+  if (allMatching.length <= 1) return []
+  return allMatching.slice(1)
 }
 
 export const MARKER_CATEGORIES: CategoryDef[] = [

@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { MarkerData, MarkerType } from '@/types'
-import { ALL_MARKER_TYPES, ALL_ITEMS } from '@/types'
+import type { MarkerData, MarkerType, LegacyMarkerData } from '@/types'
+import { migrateMarker, ALL_MARKER_TYPES, ALL_ITEMS } from '@/types'
 import markersRaw from '@/data/markers.json'
 import { EDITOR_ENABLED } from '@/config'
 
@@ -27,7 +27,9 @@ function generateId(): string {
 export const useMarkerStore = defineStore('markers', () => {
   // ---- editor mode ----
   const isEditorMode = ref(false)
-  const editableMarkers = ref<MarkerData[]>(markersRaw as MarkerData[])
+  const editableMarkers = ref<MarkerData[]>(
+    (markersRaw as LegacyMarkerData[]).map(migrateMarker)
+  )
 
   const markers = computed(() => editableMarkers.value)
 
@@ -56,7 +58,7 @@ export const useMarkerStore = defineStore('markers', () => {
       list = list.filter((m) => !foundIds.value.has(m.id))
     }
 
-    list = list.filter((m) => selectedTypes.value.has(m.type))
+    list = list.filter((m) => m.types.some((t) => selectedTypes.value.has(t)))
 
     const q = searchQuery.value.trim().toLowerCase()
     if (q) {
@@ -83,7 +85,7 @@ export const useMarkerStore = defineStore('markers', () => {
   const typeStats = computed(() => {
     const result: Record<string, { total: number; found: number }> = {}
     for (const t of ALL_MARKER_TYPES) {
-      const all = markers.value.filter((m) => m.type === t)
+      const all = markers.value.filter((m) => m.types.includes(t))
       result[t] = {
         total: all.length,
         found: all.filter((m) => foundIds.value.has(m.id)).length,
@@ -146,7 +148,8 @@ export const useMarkerStore = defineStore('markers', () => {
     try {
       const res = await fetch('/api/markers')
       if (res.ok) {
-        editableMarkers.value = await res.json()
+        const json = await res.json()
+        editableMarkers.value = (json as LegacyMarkerData[]).map(migrateMarker)
       }
     } catch { /* keep current if API unavailable */ }
   }

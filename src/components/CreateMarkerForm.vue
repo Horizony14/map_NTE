@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue'
 import { useMarkerStore } from '@/stores/markerStore'
-import { MARKER_TYPE_CONFIG, ALL_ITEMS } from '@/types'
+import { MARKER_TYPE_CONFIG, ALL_ITEMS, isEnemyClearingType } from '@/types'
 import type { MarkerType } from '@/types'
 import { resolveAssetUrl } from '@/config'
 
@@ -10,16 +10,42 @@ const store = useMarkerStore()
 const markerTypes = Object.keys(MARKER_TYPE_CONFIG) as MarkerType[]
 
 const name = ref('')
-const selectedType = ref<MarkerType>('phonebooth')
+const selectedTypes = ref<MarkerType[]>(['phonebooth'])
 const images = ref<string[]>([])
 const uploading = ref(false)
 const description = ref('')
 const refreshTime = ref('')
 const relatedQuest = ref('')
 const selectedItems = ref<string[]>([])
-const count = ref<number | undefined>(undefined)
+const counts = ref<Record<string, number>>({})
 
 const isEditing = computed(() => !!store.editingMarker)
+
+const enemyClearingTypes = computed(() =>
+  selectedTypes.value.filter(t => isEnemyClearingType(t))
+)
+
+function toggleType(type: MarkerType) {
+  const idx = selectedTypes.value.indexOf(type)
+  if (idx === -1) {
+    selectedTypes.value = [...selectedTypes.value, type]
+  } else {
+    const next = [...selectedTypes.value]
+    next.splice(idx, 1)
+    selectedTypes.value = next
+    // Also remove count for this type
+    if (isEnemyClearingType(type)) {
+      const nextCounts = { ...counts.value }
+      delete nextCounts[type]
+      counts.value = nextCounts
+    }
+  }
+}
+
+function getTypeIndex(type: MarkerType): number | null {
+  const idx = selectedTypes.value.indexOf(type)
+  return idx === -1 ? null : idx
+}
 
 // Uploaded paths cache (data URL → server path)
 const uploadedPaths = ref<Map<string, string>>(new Map())
@@ -94,32 +120,43 @@ function onDrop(idx: number) {
   dragOverIndex.value = null
 }
 
+function buildCountsRecord(): Record<string, number> | undefined {
+  const ec = enemyClearingTypes.value
+  if (ec.length === 0) return undefined
+  const result: Record<string, number> = {}
+  for (const t of ec) {
+    const v = counts.value[t]
+    if (v !== undefined && v > 0) {
+      result[t] = v
+    }
+  }
+  return Object.keys(result).length > 0 ? result : undefined
+}
+
 async function handleSave() {
   if (!name.value.trim()) return
 
   if (isEditing.value) {
-    // Edit mode — no position needed
     uploading.value = true
     const paths = await uploadNewImages()
     uploading.value = false
 
     store.updateMarker(store.editingMarker!.id, {
       name: name.value.trim(),
-      type: selectedType.value,
+      types: [...selectedTypes.value],
       lat: store.editingMarker!.lat,
       lng: store.editingMarker!.lng,
       description: description.value.trim() || undefined,
       refreshTime: refreshTime.value.trim() || undefined,
       relatedQuest: relatedQuest.value.trim() || undefined,
       relatedItems: selectedItems.value.length > 0 ? selectedItems.value : undefined,
-      count: count.value !== undefined ? count.value : undefined,
+      counts: buildCountsRecord(),
       images: paths.length > 0 ? paths : undefined,
     })
     resetForm()
     return
   }
 
-  // Create mode
   if (!store.pendingMarkerPos) return
 
   uploading.value = true
@@ -128,14 +165,14 @@ async function handleSave() {
 
   store.addMarker({
     name: name.value.trim(),
-    type: selectedType.value,
+    types: [...selectedTypes.value],
     lat: store.pendingMarkerPos.lat,
     lng: store.pendingMarkerPos.lng,
     description: description.value.trim() || undefined,
     refreshTime: refreshTime.value.trim() || undefined,
     relatedQuest: relatedQuest.value.trim() || undefined,
     relatedItems: selectedItems.value.length > 0 ? selectedItems.value : undefined,
-    count: count.value !== undefined ? count.value : undefined,
+    counts: buildCountsRecord(),
     images: paths.length > 0 ? paths : undefined,
   })
 
@@ -147,24 +184,21 @@ async function uploadNewImages(): Promise<string[]> {
   const result: string[] = []
 
   for (const img of images.value) {
-    // Already a server path — keep as-is
     if (!img.startsWith('data:')) {
       result.push(img)
       continue
     }
-    // Already uploaded in this session
     const cached = uploadedPaths.value.get(img)
     if (cached) {
       result.push(cached)
       continue
     }
-    // Upload to server
     try {
       const ext = img.match(/^data:image\/(\w+);/)?.[1] || 'png'
       const res = await fetch('/api/upload-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ data: img, type: selectedType.value, ext }),
+        body: JSON.stringify({ data: img, type: selectedTypes.value[0], ext }),
       })
       const json = await res.json()
       if (json.ok && json.path) {
@@ -185,26 +219,26 @@ function handleCancel() {
 
 function resetForm() {
   name.value = ''
-  selectedType.value = 'phonebooth'
+  selectedTypes.value = ['phonebooth']
   images.value = []
   uploading.value = false
   description.value = ''
   refreshTime.value = ''
   relatedQuest.value = ''
   selectedItems.value = []
-  count.value = undefined
+  counts.value = {}
 }
 
 // Pre-fill form when editing a marker
 watch(() => store.editingMarker, (m) => {
   if (m) {
     name.value = m.name
-    selectedType.value = m.type
+    selectedTypes.value = [...m.types]
     description.value = m.description || ''
     refreshTime.value = m.refreshTime || ''
     relatedQuest.value = m.relatedQuest || ''
     selectedItems.value = m.relatedItems ? [...m.relatedItems] : []
-    count.value = m.count
+    counts.value = m.counts ? { ...m.counts } : {}
     images.value = m.images ? [...m.images] : []
   }
 })
@@ -275,24 +309,33 @@ watch(() => store.pendingMarkerPos, (pos) => {
 
             <!-- Type selector -->
             <div>
-              <label class="block text-xs font-medium text-slate-400 mb-1.5">图标类型</label>
+              <label class="block text-xs font-medium text-slate-400 mb-1.5">
+                图标类型 <span class="text-slate-500">(可多选，按点击顺序排列)</span>
+              </label>
               <div class="grid grid-cols-4 gap-2">
                 <button
                   v-for="type in markerTypes"
                   :key="type"
-                  @click="selectedType = type"
-                  class="flex flex-col items-center gap-1 p-2 rounded-lg border transition-all"
-                  :class="selectedType === type
+                  @click="toggleType(type)"
+                  class="relative flex flex-col items-center gap-1 p-2 rounded-lg border transition-all"
+                  :class="selectedTypes.includes(type)
                     ? 'border-current bg-white/10'
                     : 'border-white/10 hover:border-white/20 bg-surface-900/50'"
-                  :style="selectedType === type ? { borderColor: MARKER_TYPE_CONFIG[type].color } : {}"
+                  :style="selectedTypes.includes(type) ? { borderColor: MARKER_TYPE_CONFIG[type].color } : {}"
                 >
+                  <!-- Order badge -->
+                  <span
+                    v-if="getTypeIndex(type) !== null"
+                    class="absolute -top-1.5 -right-1.5 w-4 h-4 flex items-center justify-center rounded-full text-[10px] font-bold text-white bg-primary-500 shadow"
+                  >
+                    {{ getTypeIndex(type)! + 1 }}
+                  </span>
                   <img
                     :src="resolveAssetUrl(MARKER_TYPE_CONFIG[type].iconUrl)"
                     :alt="MARKER_TYPE_CONFIG[type].label"
                     class="w-8 h-8 object-cover"
                   />
-                  <span class="text-xs" :style="{ color: selectedType === type ? MARKER_TYPE_CONFIG[type].color : '#94a3b8' }">
+                  <span class="text-xs" :style="{ color: selectedTypes.includes(type) ? MARKER_TYPE_CONFIG[type].color : '#94a3b8' }">
                     {{ MARKER_TYPE_CONFIG[type].label }}
                   </span>
                 </button>
@@ -416,16 +459,31 @@ watch(() => store.pendingMarkerPos, (pos) => {
               </div>
             </div>
 
-            <!-- Count -->
-            <div>
-              <label class="block text-xs font-medium text-slate-400 mb-1.5">数量</label>
-              <input
-                v-model.number="count"
-                type="number"
-                min="0"
-                placeholder="留空则不显示..."
-                class="w-full px-3 py-2 text-sm bg-surface-900 border border-white/10 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary-500 transition-colors"
-              />
+            <!-- Count (per enemy-clearing type) -->
+            <div v-if="enemyClearingTypes.length > 0">
+              <label class="block text-xs font-medium text-slate-400 mb-2">数量 (敌影清剿)</label>
+              <div class="space-y-2">
+                <div
+                  v-for="ecType in enemyClearingTypes"
+                  :key="ecType"
+                  class="flex items-center gap-2"
+                >
+                  <img
+                    :src="resolveAssetUrl(MARKER_TYPE_CONFIG[ecType].iconUrl)"
+                    :alt="MARKER_TYPE_CONFIG[ecType].label"
+                    class="w-5 h-5 rounded-full object-cover flex-shrink-0"
+                    :title="MARKER_TYPE_CONFIG[ecType].label"
+                  />
+                  <input
+                    :value="counts[ecType]"
+                    @input="counts[ecType] = ($event.target as HTMLInputElement).valueAsNumber"
+                    type="number"
+                    min="0"
+                    :placeholder="MARKER_TYPE_CONFIG[ecType].label"
+                    class="flex-1 px-3 py-1.5 text-sm bg-surface-900 border border-white/10 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-primary-500 transition-colors"
+                  />
+                </div>
+              </div>
             </div>
           </div>
 

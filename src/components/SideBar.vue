@@ -186,7 +186,7 @@ const flatVisibleTypes = computed(() => {
 
 const detailMarkers = computed(() => {
   if (!detailType.value) return []
-  return store.filteredMarkers.filter((m) => m.type === detailType.value)
+  return store.filteredMarkers.filter((m) => m.types.includes(detailType.value!))
 })
 
 const detailMarkerRows = computed(() => {
@@ -598,8 +598,8 @@ function scrollToList(id: string) {
                   :class="{ 'self-center': !isMobile || !!m.description }"
                   :style="isMobile ? { width: 'var(--card-img-size)', height: 'var(--card-img-size)' } : { width: '64px', height: '64px' }">
                   <img
-                    :src="resolveAssetUrl(MARKER_TYPE_CONFIG[m.type].iconUrl)"
-                    :alt="MARKER_TYPE_CONFIG[m.type].label"
+                    :src="resolveAssetUrl(MARKER_TYPE_CONFIG[m.types[0]].iconUrl)"
+                    :alt="MARKER_TYPE_CONFIG[m.types[0]].label"
                     class="rounded-full object-cover opacity-50"
                     :style="isMobile ? { width: `calc(var(--card-img-size) * 0.5)`, height: `calc(var(--card-img-size) * 0.5)` } : { width: '32px', height: '32px' }"
                   />
@@ -618,9 +618,9 @@ function scrollToList(id: string) {
                       class="text-xs px-1.5 py-0.5 rounded-full bg-green-500/15 text-green-400 flex-shrink-0"
                     >已标记</span>
                     <span
-                      v-if="m.count !== undefined && m.count > 0"
+                      v-if="m.counts && Object.values(m.counts).some(v => v > 0)"
                       class="text-xs px-1.5 py-0.5 rounded-full bg-red-500/15 text-red-400 flex-shrink-0 font-mono"
-                    >{{ m.count }}</span>
+                    >{{ Object.values(m.counts).reduce((a: number, b: number) => a + b, 0) }}</span>
                   </div>
                   <div
                     v-if="m.description"
