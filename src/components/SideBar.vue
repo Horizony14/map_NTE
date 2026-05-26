@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
 import { useMarkerStore } from '@/stores/markerStore'
-import { MARKER_TYPE_CONFIG, MARKER_CATEGORIES } from '@/types'
+import { MARKER_TYPE_CONFIG, MARKER_CATEGORIES, ENEMY_CLEARING_TYPES } from '@/types'
 import type { MarkerType } from '@/types'
 import { resolveAssetUrl } from '@/config'
 
@@ -65,6 +65,11 @@ const searchExpanded = ref(false)
 
 const searchInput = ref<HTMLInputElement | null>(null)
 
+// Enemy clearing section state
+const enemyExpanded = ref(false)
+const enemyMobileView = ref(false)
+const enemyTriggerRef = ref<HTMLElement | HTMLElement[] | null>(null)
+
 const categoryRows = computed(() => {
   if (!isMobile.value) return [MARKER_CATEGORIES]
   const mid = Math.ceil(MARKER_CATEGORIES.length / 2)
@@ -82,8 +87,59 @@ const categoryListData = computed(() => {
   }))
 })
 
+// Enemy clearing section computed
+const enemyActiveTypes = computed(() => ENEMY_CLEARING_TYPES.filter(t => store.selectedTypes.has(t)))
+
+const enemyCombinedStats = computed(() => {
+  let found = 0
+  let total = 0
+  for (const item of enemyAllTypes.value) {
+    found += item.foundCount
+    total += item.totalCount
+  }
+  return { found, total }
+})
+
+const enemyAllTypes = computed(() => {
+  return ENEMY_CLEARING_TYPES.map((type) => {
+    const stats = store.typeStats[type]
+    return {
+      type,
+      foundCount: stats.found,
+      totalCount: stats.total,
+      selected: store.selectedTypes.has(type),
+    }
+  })
+})
+
+const enemyPopoverStyle = computed(() => {
+  const raw = enemyTriggerRef.value
+  const el: HTMLElement | null = Array.isArray(raw) ? raw[0] ?? null : raw
+  if (!el) return { display: 'none' }
+  const rect = el.getBoundingClientRect()
+  return {
+    position: 'fixed' as const,
+    left: rect.left + 'px',
+    top: rect.bottom + 4 + 'px',
+    zIndex: 70,
+  }
+})
+
+function handleEnemyClick() {
+  if (isMobile.value) {
+    enemyMobileView.value = true
+  } else {
+    enemyExpanded.value = !enemyExpanded.value
+  }
+}
+
+function closeEnemyMobile() {
+  enemyMobileView.value = false
+}
+
 function openCategoryList() {
   showCategoryList.value = true
+  enemyExpanded.value = false
 }
 
 function closeCategoryList() {
@@ -202,11 +258,15 @@ const detailMarkerRows = computed(() => {
 
 function showDetail(type: MarkerType) {
   detailType.value = type
+  enemyExpanded.value = false
+  enemyMobileView.value = false
 }
 
 function backToList() {
   detailType.value = null
   showCategoryList.value = false
+  enemyExpanded.value = false
+  enemyMobileView.value = false
 }
 
 function scrollToList(id: string) {
@@ -239,7 +299,7 @@ function scrollToList(id: string) {
   <Transition name="slide">
     <div
       v-if="store.sidebarOpen"
-      class="fixed z-50 flex flex-col bg-surface-900/95 backdrop-blur-xl border border-white/10 shadow-2xl inset-x-0 bottom-0 rounded-t-2xl md:h-auto md:top-3 md:bottom-3 md:left-3 md:inset-x-auto md:w-[300px] md:rounded-2xl md:overflow-hidden"
+      class="fixed z-50 flex flex-col bg-surface-900/95 backdrop-blur-xl border border-white/10 shadow-2xl inset-x-0 bottom-0 rounded-t-2xl md:h-auto md:top-3 md:bottom-3 md:left-3 md:inset-x-auto md:w-[330px] md:rounded-2xl md:overflow-hidden"
       :style="isMobile ? { height: 'clamp(280px, 42dvh, 600px)' } : {}"
     >
       <!-- Mobile close button (at top edge of panel) -->
@@ -299,7 +359,7 @@ function scrollToList(id: string) {
       </div>
 
       <!-- Fixed top section -->
-      <div class="flex-shrink-0 space-y-3" :class="{ 'p-2': !isMobile, 'p-1': isMobile && detailType === null && !showCategoryList }">
+      <div class="flex-shrink-0 space-y-3" :class="{ 'p-2': !isMobile, 'p-1': isMobile && detailType === null && !showCategoryList && !enemyMobileView }">
         <!-- Header -->
         <div class="flex items-center gap-2">
           <h1 v-if="!searchExpanded" class="text-lg font-bold tracking-wide text-primary-400 select-none whitespace-nowrap truncate max-md:hidden">
@@ -345,7 +405,7 @@ function scrollToList(id: string) {
       </div>
 
       <!-- Scrollable area: main list -->
-      <div v-if="detailType === null && !showCategoryList" class="flex-1 overflow-y-auto overflow-hidden px-4 pb-4 space-y-3 max-md:space-y-2">
+      <div v-if="detailType === null && !showCategoryList && !enemyMobileView" class="flex-1 overflow-y-auto overflow-hidden px-4 pb-4 space-y-3 max-md:space-y-2" @click.self="enemyExpanded = false">
         <!-- Type filters -->
         <div>
           <div class="flex items-center justify-between mb-2">
@@ -395,9 +455,10 @@ function scrollToList(id: string) {
                 <button
                   @click="toggleCategory(cat.types)"
                   class="text-xs font-medium transition-colors"
-                  :class="[categoryAllSelected(cat.types) ? 'text-slate-200' : categoryAnySelected(cat.types) ? 'text-slate-400' : 'text-slate-600', isMobile ? 'w-auto text-left pt-0 text-[11px]' : 'w-10 flex-shrink-0 text-right pt-0.5']"
+                  :class="[categoryAllSelected(cat.types) ? 'text-slate-200' : categoryAnySelected(cat.types) ? 'text-slate-400' : 'text-slate-600', isMobile ? 'w-auto text-left pt-0 text-[11px]' : 'w-12 flex-shrink-0 text-right pt-0.5']"
                 >{{ cat.label }}</button>
-                <div :class="isMobile ? 'flex flex-nowrap gap-1' : 'flex flex-wrap gap-1 flex-1'">
+                <!-- Regular category: show individual type buttons -->
+                <div v-if="cat.label !== '敌影清剿'" :class="isMobile ? 'flex flex-nowrap gap-1' : 'flex flex-wrap gap-1 flex-1'">
                   <button
                     v-for="type in cat.types"
                     :key="type"
@@ -413,6 +474,32 @@ function scrollToList(id: string) {
                     {{ MARKER_TYPE_CONFIG[type].label }}
                   </button>
                 </div>
+                <!-- Enemy clearing: compact entry -->
+                <template v-else>
+                  <div
+                    ref="enemyTriggerRef"
+                    @click.stop="handleEnemyClick()"
+                    class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border transition-all cursor-pointer select-none"
+                    :class="[enemyActiveTypes.length > 0 ? 'border-current text-white' : 'border-white/10 text-slate-500 bg-transparent', isMobile ? 'whitespace-nowrap shrink-0' : '']"
+                    :style="enemyActiveTypes.length > 0 ? { backgroundColor: '#a78bfa33', borderColor: '#a78bfa66' } : {}"
+                  >
+                    <span class="text-[10px] font-mono font-bold min-w-[14px] text-center">{{ enemyActiveTypes.length }}</span>
+                    <div class="flex items-center" style="margin-left: 1px;">
+                      <img
+                        v-for="(type, i) in enemyActiveTypes.slice(0, 6)"
+                        :key="type"
+                        :src="resolveAssetUrl(MARKER_TYPE_CONFIG[type].iconUrl)"
+                        :alt="MARKER_TYPE_CONFIG[type].label"
+                        class="w-3.5 h-3.5 rounded-full object-cover border border-surface-900"
+                        :style="{ marginLeft: i > 0 ? '-6px' : '0' }"
+                      />
+                      <span v-if="enemyActiveTypes.length > 6" class="text-[9px] text-slate-400 ml-0.5">...</span>
+                    </div>
+                    <svg class="w-3 h-3 text-slate-500 flex-shrink-0 transition-transform" :class="{ 'rotate-90': enemyExpanded && !isMobile }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </template>
               </div>
             </div>
           </div>
@@ -425,6 +512,7 @@ function scrollToList(id: string) {
 
         <!-- Flat type list -->
         <div class="max-md:flex max-md:gap-2 max-md:overflow-x-auto max-md:pb-1 max-md:mt-2">
+          <!-- Regular type rows (non-enemy) -->
           <template v-for="item in flatVisibleTypes" :key="item.type">
             <div
               @click="showDetail(item.type)"
@@ -454,6 +542,60 @@ function scrollToList(id: string) {
 
           <div v-if="flatVisibleTypes.length === 0" class="flex items-center justify-center gap-2 text-slate-500 py-2.5 max-md:min-h-[72px] max-md:min-w-[60px] max-md:flex-shrink-0 max-md:flex-col max-md:py-1.5 max-md:rounded-lg max-md:bg-white/5">
             <svg class="w-8 h-8 opacity-30 max-md:w-8 max-md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span class="text-xs">无匹配</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Enemy clearing mobile view -->
+      <div
+        v-else-if="enemyMobileView && detailType === null"
+        class="flex-1 flex flex-col overflow-hidden max-md:rounded-t-2xl"
+      >
+        <!-- Header -->
+        <div class="flex-shrink-0 flex items-center gap-2.5 px-4 py-1.5 border-b border-white/10 bg-surface-800/80">
+          <button
+            @click="closeEnemyMobile()"
+            class="w-6 h-6 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 rounded-md transition-colors flex-shrink-0"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <span class="flex-1 text-sm leading-none font-medium text-slate-200 truncate">敌影清剿</span>
+          <span class="text-xs leading-none font-mono text-slate-500 flex-shrink-0">
+            {{ enemyCombinedStats.found }}/{{ enemyCombinedStats.total }}
+          </span>
+        </div>
+
+        <!-- Scrollable type list -->
+        <div class="flex-1 overflow-y-auto py-3 px-3">
+          <div class="flex flex-wrap gap-2">
+            <button
+              v-for="item in enemyAllTypes"
+              :key="item.type"
+              @click="store.toggleType(item.type)"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-full border transition-all"
+              :class="item.selected ? 'border-current text-white' : 'border-white/10 text-slate-500 bg-transparent'"
+              :style="item.selected ? { backgroundColor: MARKER_TYPE_CONFIG[item.type].color + '33', borderColor: MARKER_TYPE_CONFIG[item.type].color + '66' } : {}"
+            >
+              <img
+                :src="resolveAssetUrl(MARKER_TYPE_CONFIG[item.type].iconUrl)"
+                :alt="MARKER_TYPE_CONFIG[item.type].label"
+                class="w-4 h-4 rounded-full object-cover"
+              />
+              <span>{{ MARKER_TYPE_CONFIG[item.type].label }}</span>
+              <span
+                class="font-mono text-[10px]"
+                :class="item.foundCount === item.totalCount && item.totalCount > 0 ? 'text-green-400' : 'text-slate-500'"
+              >{{ item.foundCount }}/{{ item.totalCount }}</span>
+            </button>
+          </div>
+
+          <div v-if="enemyAllTypes.length === 0" class="flex items-center justify-center gap-2 text-slate-500 py-8">
+            <svg class="w-8 h-8 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
             <span class="text-xs">无匹配</span>
@@ -670,6 +812,38 @@ function scrollToList(id: string) {
         </div>
       </div>
     </Transition>
+  </Teleport>
+
+  <!-- Enemy clearing popover (desktop) -->
+  <Teleport to="body">
+    <div
+      v-if="!isMobile && enemyExpanded"
+      class="fixed inset-0 z-[65]"
+      @click="enemyExpanded = false"
+    ></div>
+    <div
+      v-if="!isMobile && enemyExpanded"
+      :style="enemyPopoverStyle"
+      @click.stop
+      class="bg-surface-800/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-3 w-[320px]"
+    >
+      <div class="flex flex-wrap gap-1.5">
+        <button
+          v-for="type in ENEMY_CLEARING_TYPES"
+          :key="type"
+          @click="store.toggleType(type)"
+          :class="['inline-flex items-center gap-1 px-2 py-0.5 text-xs rounded-full border transition-all', store.selectedTypes.has(type) ? 'border-current text-white' : 'border-white/10 text-slate-500 bg-transparent']"
+          :style="store.selectedTypes.has(type) ? { backgroundColor: MARKER_TYPE_CONFIG[type].color + '33', borderColor: MARKER_TYPE_CONFIG[type].color + '66' } : {}"
+        >
+          <img
+            :src="resolveAssetUrl(MARKER_TYPE_CONFIG[type].iconUrl)"
+            :alt="MARKER_TYPE_CONFIG[type].label"
+            class="w-3.5 h-3.5 rounded-full object-cover"
+          />
+          {{ MARKER_TYPE_CONFIG[type].label }}
+        </button>
+      </div>
+    </div>
   </Teleport>
 </template>
 
