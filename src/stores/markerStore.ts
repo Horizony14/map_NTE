@@ -301,11 +301,8 @@ export const useMarkerStore = defineStore('markers', () => {
   function openRouteDetail(routeId: string) {
     showRouteView.value = true
     currentRouteId.value = routeId
-    currentSegmentIndex.value = 0
-    const route = routes.value.find(r => r.id === routeId)
-    if (route && route.segments.length > 0) {
-      requestFocusMarkers(route.segments[0].markerIds)
-    }
+    currentSegmentIndex.value = -1
+    focusMarkerIds.value = []
   }
 
   function closeRouteView() {
