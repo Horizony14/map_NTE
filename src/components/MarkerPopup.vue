@@ -59,6 +59,21 @@ const previewSrc = computed(() => {
   return ''
 })
 const isDirectPreview = computed(() => previewDirectUrl.value !== null)
+const isMobileRouteMode = computed(() => {
+  return window.innerWidth < 768 && store.showRouteView
+})
+
+const cardStyle = computed(() => {
+  if (isMobileRouteMode.value) return {}
+  const pos = store.selectedMarkerScreenPos
+  if (!pos) return { display: 'none' }
+  return {
+    left: pos.x + 'px',
+    top: pos.y + 'px',
+    transform: 'translate(-50%, calc(-100% - 20px))',
+  }
+})
+
 const popupPrimaryType = computed(() => {
   const m = store.selectedMarker
   return m ? m.types[0] : null
@@ -283,7 +298,7 @@ watch(previewOpen, (open) => {
 
 <template>
   <Teleport to="body">
-    <Transition name="popup">
+    <Transition :name="isMobileRouteMode ? 'bottomsheet' : 'popup'">
       <div
         v-if="store.selectedMarker"
         class="fixed inset-0 z-30 pointer-events-none"
@@ -294,18 +309,18 @@ watch(previewOpen, (open) => {
           @click="store.selectMarker(null)"
         ></div>
 
-        <!-- Card - positioned above the marker on the map -->
+        <!-- Card - positioned above the marker on the map (normal) or bottom sheet (mobile route) -->
         <div
-          v-if="store.selectedMarkerScreenPos"
+          v-if="store.selectedMarkerScreenPos || isMobileRouteMode"
           class="absolute pointer-events-auto"
-          :style="{
-            left: store.selectedMarkerScreenPos.x + 'px',
-            top: store.selectedMarkerScreenPos.y + 'px',
-            transform: 'translate(-50%, calc(-100% - 20px))',
-          }"
+          :class="isMobileRouteMode ? 'bottom-0 left-0 right-0 flex justify-center' : ''"
+          :style="cardStyle"
         >
           <!-- Card body: rounded + overflow clipped -->
-          <div class="relative w-[280px] max-w-[92vw] max-h-[80vh] rounded-2xl bg-surface-800/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden">
+          <div
+            class="relative max-h-[80vh] bg-surface-800/95 backdrop-blur-xl border border-white/10 shadow-2xl overflow-hidden"
+            :class="isMobileRouteMode ? 'w-full max-w-lg rounded-t-2xl border-b-0' : 'w-[280px] max-w-[92vw] rounded-2xl'"
+          >
             <!-- Close button -->
             <button
               @click="store.selectMarker(null)"
@@ -519,8 +534,9 @@ watch(previewOpen, (open) => {
           </div>
           </div>
         </div>
-        <!-- Arrow pointing down to the marker -->
+        <!-- Arrow pointing down to the marker (hidden in mobile route mode) -->
         <div
+          v-if="!isMobileRouteMode"
           class="absolute left-1/2 -bottom-1.5 w-3 h-3 bg-surface-800/95 border border-white/10 border-t-transparent border-l-transparent rotate-45 -translate-x-1/2"
         ></div>
       </div>
@@ -667,5 +683,25 @@ watch(previewOpen, (open) => {
 .preview-enter-from,
 .preview-leave-to {
   opacity: 0;
+}
+
+/* Bottom sheet slide-up transition */
+.bottomsheet-enter-active,
+.bottomsheet-leave-active {
+  transition: opacity 0.25s ease;
+}
+.bottomsheet-enter-active > div:nth-child(2),
+.bottomsheet-leave-active > div:nth-child(2) {
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+}
+.bottomsheet-enter-from,
+.bottomsheet-leave-to {
+  opacity: 0;
+}
+.bottomsheet-enter-from > div:nth-child(2) {
+  transform: translateY(100%);
+}
+.bottomsheet-leave-to > div:nth-child(2) {
+  transform: translateY(100%);
 }
 </style>

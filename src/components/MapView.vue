@@ -328,7 +328,14 @@ watch(
   (id) => {
     if (id) {
       const m = store.markers.find((x) => x.id === id)
-      if (m) flyToMarker(m)
+      if (m) {
+        const mobile = window.innerWidth < 768
+        if (store.showRouteView && mobile) {
+          updateSelectedMarkerScreenPos(m)
+        } else {
+          flyToMarker(m)
+        }
+      }
     }
   }
 )
