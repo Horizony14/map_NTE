@@ -14,7 +14,7 @@
   <img src="https://img.shields.io/badge/免登录-即开即用-8b5cf6?style=flat-square" />
 </p>
 <p align="center">
-  <a href="https://horizony14.github.io/map_NTE/"><img src="https://img.shields.io/badge/在线地图-立即访问-3b82f6?style=for-the-badge" alt="在线地图" /></a>
+  <a href="https://map-nte.pages.dev/"><img src="https://img.shields.io/badge/在线地图-立即访问-3b82f6?style=for-the-badge" alt="在线地图" /></a>
 </p>
 
 
